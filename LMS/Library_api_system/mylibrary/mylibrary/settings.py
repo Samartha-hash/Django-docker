@@ -148,7 +148,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'lmss'),
         'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'abc123'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'creex@126'),
         'HOST': os.getenv('DB_HOST', 'localhost'),  # 'db' in Docker
         'PORT': os.getenv('DB_PORT', '5432'),
     }

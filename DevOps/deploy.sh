@@ -2,7 +2,7 @@
 set -e
 
 # Variables
-REPO="aayush90"
+REPO="samartha126"
 TAG="latest"
 SERVICES=("frontend" "backend" "sqlserver")
 
