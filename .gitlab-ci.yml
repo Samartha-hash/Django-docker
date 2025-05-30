@@ -1,6 +1,11 @@
-Guys, please check this .gitlab-ci.yml file to create a ci-cd pipeline :
-
+# Variables
+variables:
+  REPO: "samartha126"
+  TAG: "latest"
+  
 stages:
+  - build
+  - push
   - deploy
 
 deploy_manual_job:
