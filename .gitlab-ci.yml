@@ -1,0 +1,43 @@
+Guys, please check this .gitlab-ci.yml file to create a ci-cd pipeline :
+
+stages:
+  - deploy
+
+deploy_manual_job:
+  stage: deploy
+  image: alpine:latest  # lightweight image with SSH
+  before_script:
+    - apk update && apk add --no-cache openssh-client sshpass git
+  script:
+    - echo "🚀 Starting deployment on live server 110.34.2.30"
+
+    # SSH config setup
+    - mkdir -p ~/.ssh
+    - echo -e "Host live-server\n  HostName 110.34.2.30\n  Port 23\n  User devops" > ~/.ssh/config
+    - chmod 600 ~/.ssh/config
+
+    # SSH into the server and run deployment steps
+    - |
+      sshpass -p "$hsm_server_pwd" ssh -o StrictHostKeyChecking=no devops@110.34.2.30 -p 23 "
+        set -e
+        echo '🔧 Creating deployment directory...'
+        mkdir -p /home/hsmdevops/test-ci-cd
+        cd /home/hsmdevops/test-ci-cd
+
+        echo ' Cloning repository using GitLab access token...'
+        git clone -b main https://oauth2:${hsm_test_repo_token}@gitlab.com/cicd_pipeline/test-mero-store.git . || true
+
+        echo '🐳 Building & starting Docker containers...'
+        docker compose -f docker-compose.yml up -d --build
+
+        echo ' Checking container status...'
+        docker ps -a | grep -E 'CONTAINER|test-mero-store'
+
+        echo ' Displaying recent logs...'
+        docker compose logs --tail=50
+
+        echo ' Deployment completed and cleanup done on live server. test'
+      "
+  only:
+    - main
+  when: manual
